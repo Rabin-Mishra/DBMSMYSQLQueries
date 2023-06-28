@@ -1,0 +1,159 @@
+mysql> CREATE DATABASE HospitalDB;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> USE HospitalDB;
+Database changed
+mysql> CREATE TABLE Doctors (
+    ->   DoctorID INT PRIMARY KEY,
+    ->   DoctorName VARCHAR(50),
+    ->   Department VARCHAR(50),
+    ->   Address VARCHAR(100),
+    ->   Salary DECIMAL(10, 2)
+    -> );
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> describe Doctors;
++------------+---------------+------+-----+---------+-------+
+| Field      | Type          | Null | Key | Default | Extra |
++------------+---------------+------+-----+---------+-------+
+| DoctorID   | int           | NO   | PRI | NULL    |       |
+| DoctorName | varchar(50)   | YES  |     | NULL    |       |
+| Department | varchar(50)   | YES  |     | NULL    |       |
+| Address    | varchar(100)  | YES  |     | NULL    |       |
+| Salary     | decimal(10,2) | YES  |     | NULL    |       |
++------------+---------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> CREATE TABLE Patients (
+    ->   PatientID INT PRIMARY KEY,
+    ->   PatientName VARCHAR(50),
+    ->   Address VARCHAR(100),
+    ->   Age INT,
+    ->   Gender VARCHAR(10)
+    -> );
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> describe Patients;
++-------------+--------------+------+-----+---------+-------+
+| Field       | Type         | Null | Key | Default | Extra |
++-------------+--------------+------+-----+---------+-------+
+| PatientID   | int          | NO   | PRI | NULL    |       |
+| PatientName | varchar(50)  | YES  |     | NULL    |       |
+| Address     | varchar(100) | YES  |     | NULL    |       |
+| Age         | int          | YES  |     | NULL    |       |
+| Gender      | varchar(10)  | YES  |     | NULL    |       |
++-------------+--------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> CREATE TABLE Hospitals (
+    ->   HospitalID INT PRIMARY KEY AUTO_INCREMENT,
+    ->   PatientID INT,
+    ->   DoctorID INT,
+    ->   HospitalName VARCHAR(50),
+    ->   Location VARCHAR(100),
+    ->   FOREIGN KEY (PatientID) REFERENCES Patients(PatientID),
+    ->   FOREIGN KEY (DoctorID) REFERENCES Doctors(DoctorID)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> describe Hospitals;
++--------------+--------------+------+-----+---------+----------------+
+| Field        | Type         | Null | Key | Default | Extra          |
++--------------+--------------+------+-----+---------+----------------+
+| HospitalID   | int          | NO   | PRI | NULL    | auto_increment |
+| PatientID    | int          | YES  | MUL | NULL    |                |
+| DoctorID     | int          | YES  | MUL | NULL    |                |
+| HospitalName | varchar(50)  | YES  |     | NULL    |                |
+| Location     | varchar(100) | YES  |     | NULL    |                |
++--------------+--------------+------+-----+---------+----------------+
+5 rows in set (0.00 sec)
+
+mysql> INSERT INTO Doctors (DoctorID, DoctorName, Department, Address, Salary)
+    -> VALUES
+    ->   (1, 'Dr. John Doe', 'OPD', '123 Main Street', 60000.00),
+    ->   (2, 'Dr. Jane Smith', 'Cardiology', '456 Elm Street', 80000.00),
+    ->   (3, 'Dr. David Johnson', 'Pediatrics', '789 Oak Street', 70000.00);
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select * from Doctors;
++----------+-------------------+------------+-----------------+----------+
+| DoctorID | DoctorName        | Department | Address         | Salary   |
++----------+-------------------+------------+-----------------+----------+
+|        1 | Dr. John Doe      | OPD        | 123 Main Street | 60000.00 |
+|        2 | Dr. Jane Smith    | Cardiology | 456 Elm Street  | 80000.00 |
+|        3 | Dr. David Johnson | Pediatrics | 789 Oak Street  | 70000.00 |
++----------+-------------------+------------+-----------------+----------+
+3 rows in set (0.00 sec)
+
+mysql> INSERT INTO Patients (PatientID, PatientName, Address, Age, Gender)
+    -> VALUES
+    ->   (1, 'John Doe', '123 Main Street', 35, 'Male'),
+    ->   (2, 'Jane Smith', '456 Elm Street', 45, 'Female'),
+    ->   (3, 'David Johnson', '789 Oak Street', 10, 'Male');
+Query OK, 3 rows affected (0.00 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select * from Patients;
++-----------+---------------+-----------------+------+--------+
+| PatientID | PatientName   | Address         | Age  | Gender |
++-----------+---------------+-----------------+------+--------+
+|         1 | John Doe      | 123 Main Street |   35 | Male   |
+|         2 | Jane Smith    | 456 Elm Street  |   45 | Female |
+|         3 | David Johnson | 789 Oak Street  |   10 | Male   |
++-----------+---------------+-----------------+------+--------+
+3 rows in set (0.00 sec)
+
+mysql> INSERT INTO Hospitals (PatientID, DoctorID, HospitalName, Location)
+    -> VALUES
+    ->   (1, 1, 'City Hospital', 'Kathmandu'),
+    ->   (2, 2, 'Heart Center', 'Pokhara'),
+    ->   (3, 3, 'Pediatric Hospital', 'Biratnagar');
+Query OK, 3 rows affected (0.00 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> Select * from Hospitals;
++------------+-----------+----------+--------------------+------------+
+| HospitalID | PatientID | DoctorID | HospitalName       | Location   |
++------------+-----------+----------+--------------------+------------+
+|          1 |         1 |        1 | City Hospital      | Kathmandu  |
+|          2 |         2 |        2 | Heart Center       | Pokhara    |
+|          3 |         3 |        3 | Pediatric Hospital | Biratnagar |
++------------+-----------+----------+--------------------+------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT PatientID
+    -> FROM Hospitals
+    -> WHERE Location = 'Pokhara'
+    ->   AND PatientID IN (SELECT PatientID FROM Patients WHERE PatientName LIKE '%s');
+Empty set (0.00 sec)
+
+mysql> DELETE FROM Doctors
+    -> WHERE Salary > (SELECT AVG(Salary) FROM Doctors);
+ERROR 1093 (HY000): You can't specify target table 'Doctors' for update in FROM clause
+mysql> DELETE FROM Doctors
+    -> WHERE Salary > (
+    ->   SELECT avg_salary
+    ->   FROM (SELECT AVG(Salary) AS avg_salary FROM Doctors) AS avg_table
+    -> );
+ERROR 1451 (23000): Cannot delete or update a parent row: a foreign key constraint fails (`hospitaldb`.`hospitals`, CONSTRAINT `hospitals_ibfk_2` FOREIGN KEY (`DoctorID`) REFERENCES `doctors` (`DoctorID`))
+mysql> UPDATE Doctors
+    -> SET Salary = Salary * 1.185
+    -> WHERE Department = 'OPD';
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT Address, AVG(Salary) AS AverageSalary
+    -> FROM Doctors
+    -> GROUP BY Address
+    -> HAVING AVG(Salary) > 55000;
++-----------------+---------------+
+| Address         | AverageSalary |
++-----------------+---------------+
+| 123 Main Street |  71100.000000 |
+| 456 Elm Street  |  80000.000000 |
+| 789 Oak Street  |  70000.000000 |
++-----------------+---------------+
+3 rows in set (0.00 sec)
+
+mysql>

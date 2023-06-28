@@ -1,0 +1,112 @@
+
+mysql> CREATE TABLE automotor (
+    ->     chasis_number INT PRIMARY KEY,
+    ->     brand VARCHAR(50),
+    ->     name VARCHAR(50),
+    ->     model VARCHAR(50),
+    ->     year INT,
+    ->     cost DECIMAL(10, 2),
+    ->     color VARCHAR(20),
+    ->     weight DECIMAL(10, 2)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> describe automotor;
++---------------+---------------+------+-----+---------+-------+
+| Field         | Type          | Null | Key | Default | Extra |
++---------------+---------------+------+-----+---------+-------+
+| chasis_number | int           | NO   | PRI | NULL    |       |
+| brand         | varchar(50)   | YES  |     | NULL    |       |
+| name          | varchar(50)   | YES  |     | NULL    |       |
+| model         | varchar(50)   | YES  |     | NULL    |       |
+| year          | int           | YES  |     | NULL    |       |
+| cost          | decimal(10,2) | YES  |     | NULL    |       |
+| color         | varchar(20)   | YES  |     | NULL    |       |
+| weight        | decimal(10,2) | YES  |     | NULL    |       |
++---------------+---------------+------+-----+---------+-------+
+8 rows in set (0.01 sec)
+
+mysql> CREATE TABLE automotor (
+    ->     chasis_number INT PRIMARY KEY,
+    ->     brand VARCHAR(50),
+    ->     name VARCHAR(50),
+    ->     model VARCHAR(50),
+    ->     year INT,
+    ->     cost DECIMAL(10, 2),
+    ->     color VARCHAR(20),
+    ->     weight DECIMAL(10, 2)
+    -> );
+ERROR 1050 (42S01): Table 'automotor' already exists
+mysql> describe automotor;
++---------------+---------------+------+-----+---------+-------+
+| Field         | Type          | Null | Key | Default | Extra |
++---------------+---------------+------+-----+---------+-------+
+| chasis_number | int           | NO   | PRI | NULL    |       |
+| brand         | varchar(50)   | YES  |     | NULL    |       |
+| name          | varchar(50)   | YES  |     | NULL    |       |
+| model         | varchar(50)   | YES  |     | NULL    |       |
+| year          | int           | YES  |     | NULL    |       |
+| cost          | decimal(10,2) | YES  |     | NULL    |       |
+| color         | varchar(20)   | YES  |     | NULL    |       |
+| weight        | decimal(10,2) | YES  |     | NULL    |       |
++---------------+---------------+------+-----+---------+-------+
+8 rows in set (0.00 sec)
+
+mysql> INSERT INTO automotor (chasis_number, brand, name, model, year, cost, color, weight)
+    -> VALUES
+    ->     ('1', 'Toyota', 'Corolla', 'XL', 2020, 25000.00, 'Red', 1200.50),
+    ->     ('2', 'Honda', 'Civic', 'EX', 2022, 28000.00, 'Blue', 1350.75),
+    ->     ('3', 'Ford', 'Mustang', 'GT', 2021, 35000.00, 'Yellow', 1600.25);
+Query OK, 3 rows affected (0.00 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select * from automotor;
++---------------+--------+---------+-------+------+----------+--------+---------+
+| chasis_number | brand  | name    | model | year | cost     | color  | weight  |
++---------------+--------+---------+-------+------+----------+--------+---------+
+|             1 | Toyota | Corolla | XL    | 2020 | 25000.00 | Red    | 1200.50 |
+|             2 | Honda  | Civic   | EX    | 2022 | 28000.00 | Blue   | 1350.75 |
+|             3 | Ford   | Mustang | GT    | 2021 | 35000.00 | Yellow | 1600.25 |
++---------------+--------+---------+-------+------+----------+--------+---------+
+3 rows in set (0.00 sec)
+
+mysql> UPDATE automotor
+    -> SET year = 2019
+    -> WHERE chasis_number = 1;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> DELETE FROM automotor
+    -> WHERE model LIKE '%i';
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> SELECT SUM(cost) AS total_cost
+    -> FROM automotor;
++------------+
+| total_cost |
++------------+
+|   88000.00 |
++------------+
+1 row in set (0.00 sec)
+
+mysql> CREATE VIEW RedVehicles AS
+    -> SELECT *
+    -> FROM automotor
+    -> WHERE color = 'red';
+ERROR 1050 (42S01): Table 'RedVehicles' already exists
+mysql> SELECT *
+    -> FROM automotor
+    -> ORDER BY brand DESC, model ASC;
++---------------+--------+---------+-------+------+----------+--------+---------+
+| chasis_number | brand  | name    | model | year | cost     | color  | weight  |
++---------------+--------+---------+-------+------+----------+--------+---------+
+|             1 | Toyota | Corolla | XL    | 2019 | 25000.00 | Red    | 1200.50 |
+|             2 | Honda  | Civic   | EX    | 2022 | 28000.00 | Blue   | 1350.75 |
+|             3 | Ford   | Mustang | GT    | 2021 | 35000.00 | Yellow | 1600.25 |
++---------------+--------+---------+-------+------+----------+--------+---------+
+3 rows in set (0.00 sec)
+
+mysql> ALTER TABLE automotor
+    -> MODIFY color CHAR(1);
+ERROR 1406 (22001): Data too long for column 'color' at row 1
+mysql>

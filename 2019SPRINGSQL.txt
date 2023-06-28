@@ -1,0 +1,45 @@
+mysql> CREATE TABLE relation (
+    ->     hotel_id INT PRIMARY KEY AUTO_INCREMENT,
+    ->     hotel_name VARCHAR(100),
+    ->     estb_year INT,
+    ->     hotel_star INT,
+    ->     hotel_worth VARCHAR(20)
+    -> );
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> SELECT * FROM relation;
+Empty set (0.00 sec)
+
+mysql> INSERT INTO relation (hotel_name, estb_year, hotel_star, hotel_worth)
+    -> VALUES
+    ->     ('Hyatt', 1998, 'Five', '15m'),
+    ->     ('Hotel KTM', 2005, 'Three', '5m'),
+    ->     ('Fulbari', 1982, 'Five', '20m'),
+    ->     ('Yak and Yeti', 1977, 'Four', '11m'),
+    ->     ('Hotel Chitwan', 1995, 'Three', '7m');
+ERROR 1366 (HY000): Incorrect integer value: 'Five' for column 'hotel_star' at row 1
+mysql> SELECT * FROM relation;
+Empty set (0.00 sec)
+
+mysql> select * from relation;
+Empty set (0.00 sec)
+
+mysql> SELECT * FROM relation;
+Empty set (0.00 sec)
+
+mysql> CREATE VIEW price AS
+    -> SELECT hotel_name, hotel_worth
+    -> FROM relation;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> SELECT * FROM price;
+Empty set (0.00 sec)
+
+mysql> ALTER TABLE relation
+    -> MODIFY hotel_worth VARCHAR(10);
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> DELETE FROM relation
+    -> WHERE hotel_worth > '9m';
+Query OK, 0 rows affected (0.00 sec)

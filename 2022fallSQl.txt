@@ -1,0 +1,85 @@
+mysql> create database QuestionBank;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> Use QuestionBank;
+Database changed
+mysql> CREATE TABLE Actress_Details(
+    -> player_id int not null primary key auto_increment,
+    -> Actress_name varchar(20),
+    -> Debut_year int,
+    -> Recent_Release varchar(30),
+    -> Actress_fee int);
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> INSERT INTO Actress_Details (Actress_name, Debut_year, Recent_Release, Actress_fee)
+    -> VALUES
+    ->     ('Renu', 2010, 'Samay', 400000),
+    ->     ('Sita', 2022, 'Radha', 300000),
+    ->     ('Geeta', 2001, 'Mato', 600000),
+    ->     ('Amita', 1990, 'Man', 700000),
+    ->     ('Karishma', 1989, 'Prem', 100000);
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> show Actress_Details;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Actress_Details' at line 1
+mysql> select * from Actress_details;
++-----------+--------------+------------+----------------+-------------+
+| player_id | Actress_name | Debut_year | Recent_Release | Actress_fee |
++-----------+--------------+------------+----------------+-------------+
+|         1 | Renu         |       2010 | Samay          |      400000 |
+|         2 | Sita         |       2022 | Radha          |      300000 |
+|         3 | Geeta        |       2001 | Mato           |      600000 |
+|         4 | Amita        |       1990 | Man            |      700000 |
+|         5 | Karishma     |       1989 | Prem           |      100000 |
++-----------+--------------+------------+----------------+-------------+
+5 rows in set (0.00 sec)
+
+mysql> delete from Actress_details where Recent_Release="prem";
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from Actress_details;
++-----------+--------------+------------+----------------+-------------+
+| player_id | Actress_name | Debut_year | Recent_Release | Actress_fee |
++-----------+--------------+------------+----------------+-------------+
+|         1 | Renu         |       2010 | Samay          |      400000 |
+|         2 | Sita         |       2022 | Radha          |      300000 |
+|         3 | Geeta        |       2001 | Mato           |      600000 |
+|         4 | Amita        |       1990 | Man            |      700000 |
++-----------+--------------+------------+----------------+-------------+
+4 rows in set (0.00 sec)
+
+mysql> UPDATE Actress_Details
+    -> SET Recent_Release = 'Win the Race'
+    -> WHERE Actress_name = 'Renu';
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT * FROM Actress_Details;
++-----------+--------------+------------+----------------+-------------+
+| player_id | Actress_name | Debut_year | Recent_Release | Actress_fee |
++-----------+--------------+------------+----------------+-------------+
+|         1 | Renu         |       2010 | Win the Race   |      400000 |
+|         2 | Sita         |       2022 | Radha          |      300000 |
+|         3 | Geeta        |       2001 | Mato           |      600000 |
+|         4 | Amita        |       1990 | Man            |      700000 |
++-----------+--------------+------------+----------------+-------------+
+4 rows in set (0.00 sec)
+
+mysql> INSERT INTO Actress_Details (Actress_name, Debut_year, Recent_Release, Actress_fee)
+    -> VALUES ('Priya', 2005, 'Dil Se', 500000);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> SELECT * FROM Actress_Details;
++-----------+--------------+------------+----------------+-------------+
+| player_id | Actress_name | Debut_year | Recent_Release | Actress_fee |
++-----------+--------------+------------+----------------+-------------+
+|         1 | Renu         |       2010 | Win the Race   |      400000 |
+|         2 | Sita         |       2022 | Radha          |      300000 |
+|         3 | Geeta        |       2001 | Mato           |      600000 |
+|         4 | Amita        |       1990 | Man            |      700000 |
+|         6 | Priya        |       2005 | Dil Se         |      500000 |
++-----------+--------------+------------+----------------+-------------+
+5 rows in set (0.00 sec)
+
+mysql>

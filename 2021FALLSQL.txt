@@ -1,0 +1,74 @@
+mysql> CREATE TABLE chef (
+    ->     c_liscence INT PRIMARY KEY,
+    ->     c_fname VARCHAR(50),
+    ->     c_lname VARCHAR(50),
+    ->     c_dob DATE,
+    ->     c_gender VARCHAR(10),
+    ->     c_experience_hours INT,
+    ->     c_photograph VARCHAR(100)
+    -> );
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> describe chef;
++--------------------+--------------+------+-----+---------+-------+
+| Field              | Type         | Null | Key | Default | Extra |
++--------------------+--------------+------+-----+---------+-------+
+| c_liscence         | int          | NO   | PRI | NULL    |       |
+| c_fname            | varchar(50)  | YES  |     | NULL    |       |
+| c_lname            | varchar(50)  | YES  |     | NULL    |       |
+| c_dob              | date         | YES  |     | NULL    |       |
+| c_gender           | varchar(10)  | YES  |     | NULL    |       |
+| c_experience_hours | int          | YES  |     | NULL    |       |
+| c_photograph       | varchar(100) | YES  |     | NULL    |       |
++--------------------+--------------+------+-----+---------+-------+
+7 rows in set (0.00 sec)
+
+mysql> INSERT INTO chef (c_liscence, c_fname, c_lname, c_dob, c_gender, c_experience_hours, c_photograph)
+    -> VALUES (12345, 'John', 'Doe', '1980-05-15', 'Male', 5000, '/path/to/chef_photo.jpg');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from chef;
++------------+---------+---------+------------+----------+--------------------+-------------------------+
+| c_liscence | c_fname | c_lname | c_dob      | c_gender | c_experience_hours | c_photograph            |
++------------+---------+---------+------------+----------+--------------------+-------------------------+
+|      12345 | John    | Doe     | 1980-05-15 | Male     |               5000 | /path/to/chef_photo.jpg |
++------------+---------+---------+------------+----------+--------------------+-------------------------+
+1 row in set (0.00 sec)
+
+mysql> UPDATE chef
+    -> SET c_experience_hours = 6000
+    -> WHERE c_liscence = 12345;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT SUM(c_experience_hours) FROM chef;
++-------------------------+
+| SUM(c_experience_hours) |
++-------------------------+
+|                    6000 |
++-------------------------+
+1 row in set (0.00 sec)
+
+mysql> create view view_chef as
+    -> select c_liscence,c_fname,c_lname from chef;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> select * from view_chef;
++------------+---------+---------+
+| c_liscence | c_fname | c_lname |
++------------+---------+---------+
+|      12345 | John    | Doe     |
++------------+---------+---------+
+1 row in set (0.00 sec)
+
+mysql> SELECT *
+    -> FROM chef
+    -> ORDER BY c_lname DESC, c_fname ASC;
++------------+---------+---------+------------+----------+--------------------+-------------------------+
+| c_liscence | c_fname | c_lname | c_dob      | c_gender | c_experience_hours | c_photograph            |
++------------+---------+---------+------------+----------+--------------------+-------------------------+
+|      12345 | John    | Doe     | 1980-05-15 | Male     |               6000 | /path/to/chef_photo.jpg |
++------------+---------+---------+------------+----------+--------------------+-------------------------+
+1 row in set (0.00 sec)
+
+mysql>
