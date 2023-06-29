@@ -1,0 +1,173 @@
+mysql> CREATE TABLE Doctor (
+    ->   Name VARCHAR(50),
+    ->   Age INT,
+    ->   Address VARCHAR(100),
+    ->   PRIMARY KEY (Name)
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> CREATE TABLE Works (
+    ->   Name VARCHAR(50),
+    ->   Depart_no INT,
+    ->   Salary DECIMAL(10, 2),
+    ->   PRIMARY KEY (Name, Depart_no),
+    ->   FOREIGN KEY (Name) REFERENCES Doctor(Name)
+    -> );
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> CREATE TABLE Department (
+    ->   Depart_no INT,
+    ->   Depname VARCHAR(50),
+    ->   Floor INT,
+    ->   Room INT,
+    ->   PRIMARY KEY (Depart_no)
+    -> );
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> describe Doctor;
++---------+--------------+------+-----+---------+-------+
+| Field   | Type         | Null | Key | Default | Extra |
++---------+--------------+------+-----+---------+-------+
+| Name    | varchar(50)  | NO   | PRI | NULL    |       |
+| Age     | int          | YES  |     | NULL    |       |
+| Address | varchar(100) | YES  |     | NULL    |       |
++---------+--------------+------+-----+---------+-------+
+3 rows in set (0.01 sec)
+
+mysql> Describe Works;
++-----------+---------------+------+-----+---------+-------+
+| Field     | Type          | Null | Key | Default | Extra |
++-----------+---------------+------+-----+---------+-------+
+| Name      | varchar(50)   | NO   | PRI | NULL    |       |
+| Depart_no | int           | NO   | PRI | NULL    |       |
+| Salary    | decimal(10,2) | YES  |     | NULL    |       |
++-----------+---------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> Describe Department;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| Depart_no | int         | NO   | PRI | NULL    |       |
+| Depname   | varchar(50) | YES  |     | NULL    |       |
+| Floor     | int         | YES  |     | NULL    |       |
+| Room      | int         | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> INSERT INTO Doctor (Name, Age, Address)
+    -> VALUES ('Dr. John', 35, '123 Main St'),
+    ->        ('Dr. Smith', 40, '456 Elm St'),
+    ->        ('Dr. Emily', 30, '789 Oak St'),
+    ->        ('Dr. Michael', 45, '321 Pine St'),
+    ->        ('Dr. Lisa', 37, '654 Maple St');
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Works (Name, Depart_no, Salary)
+    -> VALUES ('Dr. John', 1, 5000),
+    ->        ('Dr. John', 2, 5500),
+    ->        ('Dr. Smith', 3, 6000),
+    ->        ('Dr. Emily', 4, 4500),
+    ->        ('Dr. Emily', 1, 4800),
+    ->        ('Dr. Michael', 2, 5200),
+    ->        ('Dr. Michael', 3, 5800),
+    ->        ('Dr. Lisa', 1, 4700),
+    ->        ('Dr. Lisa', 4, 5100);
+Query OK, 9 rows affected (0.01 sec)
+Records: 9  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Department (Depart_no, Depname, Floor, Room)
+    -> VALUES (1, 'Cardiology', 5, 101),
+    ->        (2, 'Pediatrics', 3, 201),
+    ->        (3, 'Orthopedics', 4, 301),
+    ->        (4, 'Gynecology', 2, 401),
+    ->        (5, 'Neurology', 6, 501);
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> select * from Doctor;
++-------------+------+--------------+
+| Name        | Age  | Address      |
++-------------+------+--------------+
+| Dr. Emily   |   30 | 789 Oak St   |
+| Dr. John    |   35 | 123 Main St  |
+| Dr. Lisa    |   37 | 654 Maple St |
+| Dr. Michael |   45 | 321 Pine St  |
+| Dr. Smith   |   40 | 456 Elm St   |
++-------------+------+--------------+
+5 rows in set (0.00 sec)
+
+mysql> select * from Works;
++-------------+-----------+---------+
+| Name        | Depart_no | Salary  |
++-------------+-----------+---------+
+| Dr. Emily   |         1 | 4800.00 |
+| Dr. Emily   |         4 | 4500.00 |
+| Dr. John    |         1 | 5000.00 |
+| Dr. John    |         2 | 5500.00 |
+| Dr. Lisa    |         1 | 4700.00 |
+| Dr. Lisa    |         4 | 5100.00 |
+| Dr. Michael |         2 | 5200.00 |
+| Dr. Michael |         3 | 5800.00 |
+| Dr. Smith   |         3 | 6000.00 |
++-------------+-----------+---------+
+9 rows in set (0.00 sec)
+
+mysql> select * from Department;
++-----------+-------------+-------+------+
+| Depart_no | Depname     | Floor | Room |
++-----------+-------------+-------+------+
+|         1 | Cardiology  |     5 |  101 |
+|         2 | Pediatrics  |     3 |  201 |
+|         3 | Orthopedics |     4 |  301 |
+|         4 | Gynecology  |     2 |  401 |
+|         5 | Neurology   |     6 |  501 |
++-----------+-------------+-------+------+
+5 rows in set (0.00 sec)
+
+mysql> select Name from Doctor where Name Not in (select Name From works);
+Empty set (0.00 sec)
+
+mysql> SELECT Name
+    -> FROM Doctor
+    -> WHERE Name NOT IN (SELECT Name FROM Works);
+Empty set (0.00 sec)
+
+mysql> SELECT D.Name
+    -> FROM Doctor D
+    -> LEFT JOIN Works W ON D.Name = W.Name
+    -> WHERE W.Name IS NULL;
+Empty set (0.00 sec)
+
+mysql> UPDATE Doctor
+    -> SET Address = 'Pokhara'
+    -> WHERE Name = 'Dr. Hari';
+Query OK, 0 rows affected (0.00 sec)
+Rows matched: 0  Changed: 0  Warnings: 0
+
+mysql> select * from Doctor;
++-------------+------+--------------+
+| Name        | Age  | Address      |
++-------------+------+--------------+
+| Dr. Emily   |   30 | 789 Oak St   |
+| Dr. John    |   35 | 123 Main St  |
+| Dr. Lisa    |   37 | 654 Maple St |
+| Dr. Michael |   45 | 321 Pine St  |
+| Dr. Smith   |   40 | 456 Elm St   |
++-------------+------+--------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT Name
+    -> FROM Works
+    -> GROUP BY Name
+    -> HAVING COUNT(DISTINCT Depart_no) >= 2;
++-------------+
+| Name        |
++-------------+
+| Dr. Emily   |
+| Dr. John    |
+| Dr. Lisa    |
+| Dr. Michael |
++-------------+
+4 rows in set (0.00 sec)
