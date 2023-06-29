@@ -1,0 +1,50 @@
+CREATE TABLE Liquors_Info (
+  serial_no INT PRIMARY KEY AUTO_INCREMENT,
+  Liquors VARCHAR(255),
+  StartYear INT,
+  Bottles INT,
+  EndYear INT
+);
+
+DESCRIBE Liquors_Info;
+
++------------+--------------+------+-----+---------+----------------+
+| Field      | Type         | Null | Key | Default | Extra          |
++------------+--------------+------+-----+---------+----------------+
+| serial_no  | int          | NO   | PRI | NULL    | auto_increment |
+| Liquors    | varchar(255) | YES  |     | NULL    |                |
+| StartYear  | int          | YES  |     | NULL    |                |
+| Bottles    | int          | YES  |     | NULL    |                |
+| EndYear    | int          | YES  |     | NULL    |                |
++------------+--------------+------+-----+---------+----------------+
+
+INSERT INTO Liquors_Info (Liquors, StartYear, Bottles, EndYear)
+VALUES ('gorkha', 1997, 10, 1998),
+       ('divine wine', 1998, 5, 2000),
+       ('old durbar', 1997, 12, 2001),
+       ('khukuri rum', 1991, 10, 1992),
+       ('xing', 1994, 5, 1995);
+
+SELECT * FROM Liquors_Info;
++-----------+--------------+-----------+---------+---------+
+| serial_no | Liquors      | StartYear | Bottles | EndYear |
++-----------+--------------+-----------+---------+---------+
+| 1         | gorkha       | 1997      | 10      | 1998    |
+| 2         | divine wine  | 1998      | 5       | 2000    |
+| 3         | old durbar   | 1997      | 12      | 2001    |
+| 4         | khukuri rum  | 1991      | 10      | 1992    |
+| 5         | xing         | 1994      | 5       | 1995    |
++-----------+--------------+-----------+---------+---------+
+SELECT *
+FROM Liquors_Info
+WHERE EndYear <= 2000;
++-----------+--------------+-----------+---------+---------+
+| serial_no | Liquors      | StartYear | Bottles | EndYear |
++-----------+--------------+-----------+---------+---------+
+| 1         | gorkha       | 1997      | 10      | 1998    |
+| 2         | divine wine  | 1998      | 5       | 2000    |
+| 4         | khukuri rum  | 1991      | 10      | 1992    |
++-----------+--------------+-----------+---------+---------+
+DELETE FROM Liquors_Info
+WHERE (EndYear - StartYear) > 2;
+
