@@ -1,0 +1,145 @@
+QUESTION::
+Employee(EID,Name,Post,Age)
+Post(Post-title,salary)
+project(PID,Pname,duration,budget)
+work-in(PID,EID,Join-date)
+
+ANSWER TO THE QUERIES::
+1::generate the sql queries to make the above relations and describe the tables as well and show their output as well
+CREATE TABLE Employee (
+  EID INT PRIMARY KEY,
+  Name VARCHAR(50),
+  Post VARCHAR(50),
+  Age INT
+);
+DESCRIBE Employee;
+
++-------+--------------+------+-----+---------+-------+
+| Field | Type         | Null | Key | Default | Extra |
++-------+--------------+------+-----+---------+-------+
+| EID   | int(11)      | NO   | PRI | NULL    |       |
+| Name  | varchar(50)  | YES  |     | NULL    |       |
+| Post  | varchar(50)  | YES  |     | NULL    |       |
+| Age   | int(11)      | YES  |     | NULL    |       |
++-------+--------------+------+-----+---------+-------+
+
+INSERT INTO Employee (EID, Name, Post, Age)
+VALUES (1, 'John', 'Manager', 35),
+       (2, 'Sarah', 'Analyst', 28),
+       (3, 'Michael', 'Engineer', 32),
+       (4, 'Emma', 'Developer', 31),
+       (5, 'David', 'Manager', 38);
+
+SELECT * FROM Employee;
++-----+---------+-----------+-----+
+| EID | Name    | Post      | Age |
++-----+---------+-----------+-----+
+| 1   | John    | Manager   | 35  |
+| 2   | Sarah   | Analyst   | 28  |
+| 3   | Michael | Engineer  | 32  |
+| 4   | Emma    | Developer | 31  |
+| 5   | David   | Manager   | 38  |
++-----+---------+-----------+-----+
+
+
+
+
+
+
+CREATE TABLE Post (
+  Post_title VARCHAR(50) PRIMARY KEY,
+  Salary DECIMAL(10,2)
+);
+DESCRIBE Post;
++-------------+--------------+------+-----+---------+-------+
+| Field       | Type         | Null | Key | Default | Extra |
++-------------+--------------+------+-----+---------+-------+
+| Post_title  | varchar(50)  | NO   | PRI | NULL    |       |
+| Salary      | decimal(10,2)| YES  |     | NULL    |       |
++-------------+--------------+------+-----+---------+-------+
+
+INSERT INTO Post (Post_title, Salary)
+VALUES ('Manager', 5000),
+       ('Analyst', 3500),
+       ('Engineer', 4000),
+       ('Developer', 4500);
+SELECT * FROM Post;
++------------+--------+
+| Post_title | Salary |
++------------+--------+
+| Manager    | 5000   |
+| Analyst    | 3500   |
+| Engineer   | 4000   |
+| Developer  | 4500   |
++------------+--------+
+
+
+
+CREATE TABLE project (
+  PID INT PRIMARY KEY,
+  Pname VARCHAR(50),
+  Duration INT,
+  Budget DECIMAL(10,2)
+);
+
+DESCRIBE project;
++----------+--------------+------+-----+---------+-------+
+| Field    | Type         | Null | Key | Default | Extra |
++----------+--------------+------+-----+---------+-------+
+| PID      | int(11)      | NO   | PRI | NULL    |       |
+| Pname    | varchar(50)  | YES  |     | NULL    |       |
+| Duration | int(11)      | YES  |     | NULL    |       |
+| Budget   | decimal(10,2)| YES  |     | NULL    |       |
++----------+--------------+------+-----+---------+-------+
+
+
+CREATE TABLE work_in (
+  PID INT,
+  EID INT,
+  Join_date DATE,
+  FOREIGN KEY (PID) REFERENCES project(PID),
+  FOREIGN KEY (EID) REFERENCES Employee(EID)
+);
+
+DESCRIBE work_in;
+
++-----------+---------+------+-----+---------+-------+
+| Field     | Type    | Null | Key | Default | Extra |
++-----------+---------+------+-----+---------+-------+
+| PID       | int(11) | YES  | MUL | NULL    |       |
+| EID       | int(11) | YES  | MUL | NULL    |       |
+| Join_date | date    | YES  |     | NULL    |       |
++-----------+---------+------+-----+---------+-------+
+
+2::list the name of the employees whose age is greater than average age of all employees
+SELECT Name
+FROM Employee
+WHERE Age > (SELECT AVG(Age) FROM Employee);
+
+| Name    |
+|---------|
+| John    |
+| Michael |
+| Emma    |
+| David   |
+
+3::display all the employee numbers of those employee who are not working in any project
+SELECT EID
+FROM Employee
+WHERE EID NOT IN (SELECT EID FROM work_in);
+| EID |
+|-----|
+| 2   |
+| 5   |
+
+4::list the name of the employee and the salary who are working in the project "DBMS"
+SELECT e.Name, p.Salary
+FROM Employee e
+JOIN work_in w ON e.EID = w.EID
+JOIN project pr ON w.PID = pr.PID
+JOIN Post p ON e.Post = p.Post_title
+WHERE pr.Pname = 'DBMS';
+Name	Salary
+John	5000
+Michael	4000
+
