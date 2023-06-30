@@ -1,0 +1,141 @@
+CREATE TABLE Employee (
+  emp_name VARCHAR(100) PRIMARY KEY,
+  street VARCHAR(100),
+  city VARCHAR(100)
+);
+DESCRIBE Employee;
++----------+--------------+------+-----+---------+-------+
+| Field    | Type         | Null | Key | Default | Extra |
++----------+--------------+------+-----+---------+-------+
+| emp_name | varchar(100) | NO   | PRI | NULL    |       |
+| street   | varchar(100) | YES  |     | NULL    |       |
+| city     | varchar(100) | YES  |     | NULL    |       |
++----------+--------------+------+-----+---------+-------+
+
+
+CREATE TABLE Works (
+  emp_name VARCHAR(100),
+  comp_name VARCHAR(100),
+  salary DECIMAL(10, 2),
+  PRIMARY KEY (emp_name, comp_name),
+  FOREIGN KEY (emp_name) REFERENCES Employee(emp_name),
+  FOREIGN KEY (comp_name) REFERENCES Company(comp_name)
+);
+DESCRIBE Works;
++-----------+---------------+------+-----+---------+-------+
+| Field     | Type          | Null | Key | Default | Extra |
++-----------+---------------+------+-----+---------+-------+
+| emp_name  | varchar(100)  | YES  | MUL | NULL    |       |
+| comp_name | varchar(100)  | YES  | MUL | NULL    |       |
+| salary    | decimal(10,2) | YES  |     | NULL    |       |
++-----------+---------------+------+-----+---------+-------+
+
+
+CREATE TABLE Company (
+  comp_name VARCHAR(100) PRIMARY KEY,
+  city VARCHAR(100)
+);
+DESCRIBE Company;
++-----------+--------------+------+-----+---------+-------+
+| Field     | Type         | Null | Key | Default | Extra |
++-----------+--------------+------+-----+---------+-------+
+| comp_name | varchar(100) | NO   | PRI | NULL    |       |
+| city      | varchar(100) | YES  |     | NULL    |       |
++-----------+--------------+------+-----+---------+-------+
+
+
+CREATE TABLE Manages (
+  emp_name VARCHAR(100),
+  manager_name VARCHAR(100),
+  PRIMARY KEY (emp_name),
+  FOREIGN KEY (emp_name) REFERENCES Employee(emp_name),
+  FOREIGN KEY (manager_name) REFERENCES Employee(emp_name)
+);
+
+DESCRIBE Manages;
++--------------+--------------+------+-----+---------+-------+
+| Field        | Type         | Null | Key | Default | Extra |
++--------------+--------------+------+-----+---------+-------+
+| emp_name     | varchar(100) | NO   | PRI | NULL    |       |
+| manager_name | varchar(100) | YES  | MUL | NULL    |       |
++--------------+--------------+------+-----+---------+-------+
+
+
+
+-- Insert values into the Employee table
+INSERT INTO Employee (emp_name, street, city)
+VALUES ('John Doe', '123 Main St', 'New York'),
+       ('Jane Smith', '456 Elm St', 'Los Angeles'),
+       ('Mike Johnson', '789 Oak St', 'Chicago');
+SELECT * FROM Employee;
++-----------+-------------+-------------+
+| emp_name  | street      | city        |
++-----------+-------------+-------------+
+| John Doe  | 123 Main St | New York    |
+| Jane Smith| 456 Elm St  | Los Angeles |
+| Mike Johnson | 789 Oak St | Chicago   |
++-----------+-------------+-------------+
+
+-- Insert values into the Works table
+INSERT INTO Works (emp_name, comp_name, salary)
+VALUES ('John Doe', 'ABC Company', 5000.00),
+       ('Jane Smith', 'XYZ Corporation', 6000.00),
+       ('Mike Johnson', 'ABC Company', 5500.00);
+       SELECT * FROM Works;
++-----------+-------------+--------+
+| emp_name  | comp_name   | salary |
++-----------+-------------+--------+
+| John Doe  | ABC Company | 5000.00|
+| Jane Smith| XYZ Corporation | 6000.00|
+| Mike Johnson | ABC Company | 5500.00|
++-----------+-------------+--------+
+
+
+-- Insert values into the Company table
+INSERT INTO Company (comp_name, city)
+VALUES ('ABC Company', 'New York'),
+       ('XYZ Corporation', 'Los Angeles'),
+       ('123 Industries', 'Chicago');
+       SELECT * FROM Company;
++-------------+-------------+
+| comp_name   | city        |
++-------------+-------------+
+| ABC Company | New York    |
+| XYZ Corporation | Los Angeles|
+| 123 Industries | Chicago   |
++-------------+-------------+
+
+
+-- Insert values into the Manages table
+INSERT INTO Manages (emp_name, manager_name)
+VALUES ('John Doe', 'Jane Smith'),
+       ('Mike Johnson', 'Jane Smith');
+       SELECT * FROM Manages;
++--------------+--------------+
+| emp_name     | manager_name |
++--------------+--------------+
+| John Doe     | Jane Smith   |
+| Mike Johnson | Jane Smith   |
++--------------+--------------+
+
+UPDATE Employee
+SET city = 'Kathmandu'
+WHERE emp_name = 'Ram';
+
+UPDATE Works
+SET salary = salary * 1.10
+WHERE comp_name = 'First Bank Corp';
+
+DELETE FROM Works
+WHERE comp_name="SMALL BANK CORP";
+
+SELECT e.emp_name, e.salary, w.comp_name
+FROM Works w
+JOIN Employee e ON e.emp_name = w.emp_name
+WHERE e.salary > (
+    SELECT AVG(salary)
+    FROM Works
+    WHERE comp_name = w.comp_name
+);
+
+
